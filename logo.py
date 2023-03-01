@@ -91,9 +91,8 @@ class Animation(QWidget):
 
 
 
-#commitgittest
-
-
+#commitgittest232234234234
+#wasser
 if __name__ == "__main__":
 
     app = QApplication(sys.argv)
