@@ -14,6 +14,13 @@ class FlyingButton(QPushButton):
         super().__init__(arg1, arg2)
         self.x = 1920
         self.y = 1080
+    def setpos(self,x,y):
+        self.x = x
+        self.y = y
+    def setv(self,vx,vy):
+        self.vx = vx
+        self.vy = vy
+        
         
 class Animation(QWidget):
 
@@ -46,8 +53,7 @@ class Animation(QWidget):
             btn.setStyleSheet(f"background-color:{colors}")
             btn.clicked.connect(self.callback)
             self.btns.append(btn)
-            self.xlist.append(x)
-            self.ylist.append(y)
+            btn.setpos(x,y)
             self.vxlist.append(10)
             self.vylist.append(10)
         self.run_timer.timeout.connect(self.update)
@@ -78,6 +84,14 @@ class Animation(QWidget):
         self.counter += 1
         print(self.counter)        
 
+
+
+
+
+
+
+
+#commitgittest
 
 
 if __name__ == "__main__":
