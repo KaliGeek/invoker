@@ -10,20 +10,31 @@ from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QDesktopWidget, QInputDialog,  QAction, QApplication, QLabel
 import random
 class FlyingButton(QPushButton):
-    def __init__(self, arg1, arg2):
+    def __init__(self, arg1, arg2,arg3,arg4):
         super().__init__(arg1, arg2)
         self.x = 1920
         self.y = 1080
+        self.win_width = arg3
+        self.win_height = arg4
     def setpos(self,x,y):
         self.x = x
         self.y = y
     def setv(self,vx,vy):
         self.vx = vx
         self.vy = vy
-        
-        
+    def update(self):
+        self.x += self.vx
+        self.y += self.vy
+        self.move(self.x,self.y)
+        if self.x >= self.win_width - self.vx:
+                self.vx = -self.vx
+        if self.y >= self.win_height - self.vy:
+                self.vy = -self.vy                          
+        if self.y <= 0:
+                self.vy = -self.vy
+        if self.x <= 0:
+               self.vx = -self.vx        
 class Animation(QWidget):
-
 
     def __init__(self, rows = 40, cols = 40):
         self.win_width = 1920
@@ -38,14 +49,10 @@ class Animation(QWidget):
 
     def initUI(self):
         self.setGeometry(200, 200, self.win_width, self.win_height)
-        self.btns = []
-        self.xlist = []
-        self.ylist = []
-        self.vxlist= []
-        self.vylist = []
+        self.btns = [] 
         for i in range(20):
             x,y=random.randrange(self.win_width), random.randrange(self.win_height)
-            btn = FlyingButton('',self)
+            btn = FlyingButton('',self,self.win_width, self.win_height)
             btn.resize(20,20)
             btn.move(x,y)
             color = 'red', 'yellow','blue','purple','black'
@@ -54,26 +61,14 @@ class Animation(QWidget):
             btn.clicked.connect(self.callback)
             self.btns.append(btn)
             btn.setpos(x,y)
-            self.vxlist.append(10)
-            self.vylist.append(10)
+            btn.setv(random.randrange(10,50),random.randrange(10,50))
         self.run_timer.timeout.connect(self.update)
         self.run_timer.start(self.delta_t)
         self.show()
 
     def update(self):
         for i in range(len(self.btns)):
-            self.xlist[i] += self.vxlist[i]
-            self.ylist[i] += self.vylist[i]
-            self.btns[i].move(self.xlist[i],self.ylist[i])
-            if self.xlist[i] >= self.win_width - self.vx:
-                self.vxlist[i] = -self.vxlist[i]
-            if self.ylist[i] >= self.win_height - self.vy:
-                self.vylist[i] = -self.vylist[i]                          
-            if self.ylist[i] <= 0:
-                self.vylist[i] = -self.vylist[i]
-            if self.xlist[i] <= 0:
-               self.vxlist[i] = -self.vxlist[i]
-            
+            self.btns[i].update()            
 
     def btnrand(self):
 
